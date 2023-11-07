@@ -1,0 +1,11 @@
+{
+    "languages": [
+        { "key": "PT", "text": "PT - Portuguese" },
+        { "key": "EN", "text": "EN - English" },
+        { "key": "ES", "text": "ES - Spanish" }
+    ],
+    "themes": [
+        { "key": "sap_fiori_3", "text": "Quartz Light" },
+        { "key": "sap_fiori_3_dark", "text": "Quartz Dark" }    
+    ]
+  }

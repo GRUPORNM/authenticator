@@ -1,0 +1,232 @@
+<mvc:View
+    xmlns:core="sap.ui.core"
+    controllerName="authenticator.controller.Main"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+>
+    <Page
+        id="_IDGenPage1"
+        title="Centered Text"
+        showHeader="false"
+    >
+        <html:header>
+            <html:div class="loginLogo">
+                <html:img
+                    src="/sap/bc/ui5_ui5/tqa/launchpad/img/logobranco.png"
+                    width="84"
+                />
+            </html:div>
+        </html:header>
+        <content>
+            <FlexBox
+                id="_IDGenFlexBox1"
+                alignItems="Center"
+                justifyContent="Center"
+                height="100%"
+                direction="Column"
+            >
+                <html:div
+                    id="USERNAME_BLOCK"
+                    class="loginInput sapUiLightestBG"
+                >
+                    <html:label
+                        id="USERNAME_LABEL"
+                        for="USERNAME_FIELD-inner"
+                        class="loginHiddenAccessible"
+                    >
+                        Utilizador
+                    </html:label>
+                    <html:input
+                        id="USERNAME_FIELD-inner"
+                        tabindex="0"
+                        type="text"
+                        class="loginInputField"
+                        name="sap-user"
+                        maxlength="12 "
+                        inputmode="verbatim"
+                        autocorrect="off"
+                        autocapitalize="none"
+                        placeholder="User"
+                        title="Usuário"
+                        required="true"
+                        aria-required="true"
+                        aria-describedby="USERNAME_LABEL"
+                    />
+                </html:div>
+
+                <html:div
+                    id="PASSWORD_BLOCK"
+                    class="loginInput sapUiLightestBG"
+                >
+                    <html:label
+                        id="PASSWORD_LABEL"
+                        for="PASSWORD_FIELD-inner"
+                        class="loginHiddenAccessible"
+                    >
+                        Senha
+                    </html:label>
+                    <html:input
+                        id="PASSWORD_FIELD-inner"
+                        tabindex="0"
+                        type="password"
+                        class="loginInputField "
+                        name="sap-password"
+                        inputmode="verbatim"
+                        placeholder="Password"
+                        title="Senha"
+                        required="true"
+                        aria-required="true"
+                        aria-describedby="PASSWORD_LABEL"
+                    />
+                </html:div>
+
+                <html:div id="LANGUAGE_BLOCK">
+                    <html:div
+                        id="LANGUAGE_LABEL_BLOCK"
+                        class="loginDisplayInput"
+                    >
+                        <html:label
+                            id="LANGUAGE_LABEL"
+                            for="LANGUAGE_SELECT"
+                            class="sapUiContentForegroundTextColor"
+                        >
+                            Language
+                        </html:label>
+                    </html:div>
+                    <html:div id="LANGUAGE_SELECT_BLOCK">
+                        <html:select
+                            id="LANGUAGE_SELECT"
+                            tabindex="0"
+                            class="loginSelect"
+                            title="Idioma"
+                            aria-describedby="LANGUAGE_LABEL"
+                        >
+                            <html:option value="PT">
+                                PT - Portuguese
+                            </html:option>
+                            <!-- <html:option value="CA">CA - Catalan</html:option>
+                            <html:option value="DA">DA - Danish</html:option>
+                            <html:option value="DE">DE - German</html:option> -->
+                            <!-- <html:option value="ET">ET - Estonian</html:option> -->
+                            <html:option value="EN">EN - English</html:option>
+                            <html:option value="ES">ES - Spanish</html:option>
+                            <!-- <html:option value="FR">FR - French</html:option> -->
+                            <!-- <html:option value="HR">HR - Croatian</html:option> -->
+                            <!-- <html:option value="IT">IT - Italian</html:option> -->
+                            <!-- <html:option value="LV">LV - Latvian</html:option> -->
+                            <!-- <html:option value="LT">
+                                LT - Lithuanian
+                            </html:option> -->
+                            <!-- <html:option value="HU">HU - Hungarian</html:option>
+                            <html:option value="NL">NL - Dutch</html:option>
+                            <html:option value="NO">NO - Norwegian</html:option>
+                            <html:option value="RO">RO - Romanian</html:option>
+                            <html:option value="SK">SK - Slovak</html:option>
+                            <html:option value="SL">SL - Slovenian</html:option>
+                            <html:option value="SH">
+                                SH - Serbian (Latin)
+                            </html:option> -->
+                            <!-- <html:option value="FI">FI - Finnish</html:option>
+                            <html:option value="SV">SV - Swedish</html:option>
+                            <html:option value="TH">TH - Thai</html:option>
+                            <html:option value="TR">TR - Turkish</html:option>
+                            <html:option value="VI">
+                                VI - Vietnamese
+                            </html:option> -->
+                            <!-- <html:option value="PL">PL - Polish</html:option>
+                            <html:option value="CS">CS - Czech</html:option>
+                            <html:option value="EL">EL - Greek</html:option>
+                            <html:option value="BG">BG - Bulgarian</html:option>
+                            <html:option value="RU">RU - Russian</html:option>
+                            <html:option value="UK">UK - Ukrainian</html:option>
+                            <html:option value="KK">KK - Kazakh</html:option>
+                            <html:option value="HE">HE - Hebrew</html:option>
+                            <html:option value="AR">AR - Arabic</html:option>
+                            <html:option value="HI">HI - Hindi</html:option>
+                            <html:option value="ZH">ZH - Chinese</html:option>
+                            <html:option value="JA">JA - Japanese</html:option>
+                            <html:option value="ZF">
+                                ZF - Traditional Chinese
+                            </html:option>
+                            <html:option value="KO">KO - Korean</html:option> -->
+                        </html:select>
+                    </html:div>
+                </html:div>
+
+                <html:div
+                    id="LOGIN_SUBMIT_BLOCK"
+                    class="loginButtonRow"
+                >
+                    <html:button
+                        id="LOGIN_LINK"
+                        type="submit"
+                        class="loginButton sapUiButtonEmphasized"
+                        tabindex="0"
+                        title="Logon"
+                    >
+                        Logon
+                    </html:button>
+                </html:div>
+
+                <html:div
+                    id="LOGIN_CHANGE_PASSWORD_BLOCK"
+                    class="loginButtonRow"
+                >
+                    <html:button
+                        id="CHANGE_PASSWORD_LINK"
+                        type="button"
+                        class="loginButton sapUiButtonLite"
+                        tabindex="0"
+                        title="Modificar senha"
+                    >
+                        Change Password
+                    </html:button>
+                </html:div>
+
+                <!-- <Input
+                    id="inUser"
+                    placeholder="Utilizador"
+                    width="100%"
+                /> -->
+
+                <!-- <Input
+                    id="inPassword"
+                    placeholder="Password"
+                /> -->
+
+                <!-- <Button
+                    id="btLogin"
+                    text="Logon"
+                    type="Emphasized"
+                    width="100%"
+                    press="onPress"
+                /> -->
+                <!-- <core:HTML
+                    id="_IDGenHTML1"
+                    content='&lt;div class=&quot;loginInput&quot;&gt; &lt;input id=&quot;inUser&quot; placeholder=&quot;Utilizador&quot; class=&quot;loginInputField rnmText&quot;&gt;&lt;/input&gt;&lt;/div&gt;'
+                />
+                <core:HTML
+                    id="_IDGenHTML2"
+                    content='&lt;div class=&quot;loginInput &quot;&gt; &lt;input id=&quot;inPassword&quot; type=&quot;password&quot; placeholder=&quot;Password&quot; class=&quot;loginInputField rnmText&quot;&gt;&lt;/input&gt;&lt;/div&gt;'
+                />
+
+                <core:HTML
+                    id="_IDGenHTML3"
+                    content='&lt;div class=&quot;loginInput&quot;&gt; &lt;button id=&quot;inPassword&quot; class=&quot;loginButton sapUiButtonEmphasized rnmText&quot;&gt;Logon&lt;/input&gt;&lt;/div&gt;'
+                /> -->
+            </FlexBox>
+        </content>
+        <html:footer>
+            <html:div class="loginCopyright">
+                <html:label class="sapMLabel">
+                    Direitos autoriais © 2023 Grupo RNM Todos os direitos
+                    reservados.
+                </html:label>
+            </html:div>
+        </html:footer>
+    </Page>
+</mvc:View>
