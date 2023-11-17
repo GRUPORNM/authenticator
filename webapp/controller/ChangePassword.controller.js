@@ -11,12 +11,13 @@ sap.ui.define([
 			);
 			this.getView().setModel(oModel, "ChangePassword");
 			// Your onInit code here
+
+			var oRouter = this.getOwnerComponent().getRouter();
+			oRouter.attachRouteMatched(this.onRouteMatched, this);
 		},
 
-		onAfterRendering: function () {
+		onRouteMatched: function(){
 			var aRnmUser = this.getModel("global").getProperty("/aRnmUser");
-			debugger;
-			// aRnmUser = '0123456789';
 			if (!aRnmUser) {
 				this.getRouter().navTo("RouteMain");
 			}
@@ -31,14 +32,27 @@ sap.ui.define([
 			}
 		},
 
+		onAfterRendering: function () {
+			// var aRnmUser = this.getModel("global").getProperty("/aRnmUser");
+			// if (!aRnmUser) {
+			// 	this.getRouter().navTo("RouteMain");
+			// }
+			// else {
+			// 	var aElements = this.getView().$().find(".loginInputField");
+			// 	var aRnmUserInput = aElements[0];
+			// 	$(aRnmUserInput).val(aRnmUser);
+			// 	var oButton = this.getView().byId("LOGIN_CHANGEPASSWORD");
+			// 	oButton.$().on("click", this.onPressChangePassword.bind(this, aRnmUser));
+			// 	var oButton = this.getView().byId("CHANGE_PASSWORD_RETURN");
+			// 	oButton.$().on("click", this.onNavBack.bind(this, aRnmUser));
+			// }
+		},
+
 		onNavBack: function(oEvent, aRnmUser){
-			debugger;
 			this.getRouter().navTo("RouteMain");
 		},
 
 		onPressChangePassword: function (oEvent, aRnmUser) {
-			debugger;
-
 			var that = this;
 			var aElements = this.getView().$().find(".loginInputField");
 			var aRnmUser = aElements[0].value;
@@ -81,7 +95,7 @@ sap.ui.define([
 				success: function (oData, oResponse) {
 					// Manipule a resposta bem-sucedida aqui
 					// console.log("Dados recuperados:", oData);
-
+					debugger;
 					if (oData.results[0].Response.includes('SUCCESS')) {
 						that.getRouter().navTo("RouteMain");
 						// that.getModel("global").setProperty("/busy", true);

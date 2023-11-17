@@ -17,6 +17,8 @@
         "@sap-ux/ui5-middleware-fe-mockserver": "2",
         "@sap/ux-ui5-tooling": "1",
         "@ui5/cli": "^3.0.0",
+        "crypto": "^1.0.1",
+        "glob": "^10.3.10",
         "rimraf": "^3.0.2",
         "ui5-task-flatten-library": "0.2.5"
     },

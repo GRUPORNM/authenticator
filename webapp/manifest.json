@@ -79,13 +79,13 @@
         "resources": {
             "css": [
                 {
-                    "uri": "css/style.css"
+                    "uri": "css/style.css?v=1.7"
                 },
                 {
-                    "uri": "css/myLibrary.css"
+                    "uri": "css/myLibrary.css?v=1.7"
                 },
                 {
-                    "uri": "css/myStyle.css"
+                    "uri": "css/myStyle.css?v=1.7"
                 }
             ]
         },

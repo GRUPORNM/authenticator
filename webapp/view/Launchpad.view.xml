@@ -30,22 +30,31 @@
                     </html:div>
                 </f:heading>
                 <f:actions>
-                    <Button
-                        id="btNotification"
-                        type="Unstyled"
-                        class="notificationButton "
-                        icon="sap-icon://bell"
-                        tooltip="{i18n>notifications}"
-                        press="onOpenNotificationPopover"
-                        text=""
-                    />
-                    <Button
-                        id="btInformation"
-                        text="{Launchpad>/userName}"
-                        type="Unstyled"
-                        class="avatarButton"
-                        press="onPressLogoutPopover"
-                    />
+                    <HBox id="navBarActions">
+                        <SearchField
+                            id="searchField"
+                            visible="{view>/searchVisible}"
+                            placeholder="{i18n>searchPlaceholder}"
+                            class="searchFieldNav"
+                            liveChange="onSearch"
+                        />
+                        <Button
+                            id="btNotification"
+                            type="Unstyled"
+                            class="notificationButton "
+                            icon="sap-icon://bell"
+                            tooltip="{i18n>notifications}"
+                            press="onOpenNotificationPopover"
+                            text=""
+                        />
+                        <Button
+                            id="btInformation"
+                            text="{Launchpad>/userName}"
+                            type="Unstyled"
+                            class="avatarButton"
+                            press="onPressLogoutPopover"
+                        />
+                    </HBox>
                 </f:actions>
                 <f:navigationActions>
                     <!-- <Button id="_IDGenButton2"
@@ -60,9 +69,7 @@
             </f:DynamicPageTitle>
         </f:title>
         <f:content>
-        <VBox id="vbLaunchpadApps">
-        
-        </VBox>
+            <!-- <VBox id="vbLaunchpadApps" /> -->
             <!-- <l:VerticalLayout
                 id="MainContent"
                 width="100%"
@@ -173,7 +180,6 @@
                     </VBox>
                 </l:VerticalLayout>
             </l:VerticalLayout> -->
-
         </f:content>
     </f:DynamicPage>
     <!-- <html:footer>

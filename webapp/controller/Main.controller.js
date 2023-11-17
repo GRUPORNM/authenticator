@@ -7,6 +7,7 @@ sap.ui.define([
     function (BaseController) {
         "use strict";
 
+        // var count = 0;
         return BaseController.extend("authenticator.controller.Main", {
 
             onInit: function () {
@@ -16,7 +17,10 @@ sap.ui.define([
 
             onRouteMatched: function () {
                 var rnm_tk = sessionStorage.getItem('rnm_tk');
-                if (rnm_tk == 'undefined') {
+                if (rnm_tk == 'undefined' || !rnm_tk) {
+                    // count = count + 1;
+                    // if(count > 1)
+                    sessionStorage.clear();
                     this.getModel("global").setProperty("/busy", false);
                     var aElements = this.getView().$().find(".loginInputField");
                     var aRnmUser = aElements[0];
@@ -37,7 +41,7 @@ sap.ui.define([
                 var that = this;
                 this.getView().$().find(".loginInputField").on("keydown", function (oEvent) {
                     if (oEvent.key === "Enter" || oEvent.which === 13) {  // 13 é o código da tecla Enter
-                        debugger;
+                        
                         that.onPress();
                     }
                 });
@@ -51,9 +55,11 @@ sap.ui.define([
             },
 
             onPressChangePassword: function () {
+                sessionStorage.clear();
                 var aElements = this.getView().$().find(".loginInputField");
                 var aRnmUser = aElements[0].value;
                 if (aRnmUser.length > 0) {
+                    debugger;
                     this.getModel("global").setProperty("/aRnmUser", aRnmUser);
                     this.getRouter().navTo("ChangePassword");
                 }
@@ -105,10 +111,10 @@ sap.ui.define([
                                 oTheme = "sap_fiori_3";
                             else
                                 oTheme = oData.results[0].UsrTheme;
-                            debugger;
+                            
                             sessionStorage.setItem("selectedTheme", oTheme);
                             var UsrShortcuts = "";
-                            debugger;
+                            
                             if (oData.results[0].UsrShortcuts == "")
                                 UsrShortcuts = false;
                             else

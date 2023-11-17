@@ -56,6 +56,10 @@
     /* margin-top: 15px !important; */
 }
 
+.searchFieldNav{
+    padding-top: 0.35em !important;
+}
+
 .notificationButton {
     background-color: transparent;
     font-size: 1.125rem;

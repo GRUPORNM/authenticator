@@ -16,6 +16,18 @@ sap.ui.define([
 				}
 			);
 			this.getView().setModel(oModel, "Launchpad");
+
+			var oData = {
+				messages: [
+					{ sender: "John Doe", text: "Hi there!", timestamp: "10:00 AM" },
+					{ sender: "Jane Doe", text: "Hello!", timestamp: "10:01 AM" }
+				]
+			};
+
+			// Definindo o modelo local com dados de exemplo
+			var oModel = new sap.ui.model.json.JSONModel(oData);
+			this.getView().setModel(oModel, "Chat");
+
 			var oRouter = this.getOwnerComponent().getRouter();
 			oRouter.attachRouteMatched(this.onRouteMatched, this);
 			// 
@@ -35,7 +47,6 @@ sap.ui.define([
 
 			if (oButton) {
 				// var $button = oButton.$();  // Obtenha o jQuery DOM reference para o elemento
-
 				// Verifique se o elemento tem a classe "notifWithRed"
 				if (!oButton.hasStyleClass("notifWithRed")) {
 					oButton.addStyleClass("notifWithRed");
@@ -44,10 +55,38 @@ sap.ui.define([
 			}
 		},
 
+		onOpenUsrNotifApp: function () {
+			sessionStorage.setItem("app", "026");
+			var oButton = this.byId("btNotification");
+			if (oButton) {
+				if (oButton.hasStyleClass("notifWithRed")) {
+					oButton.removeStyleClass("notifWithRed");
+					oButton.setText("");
+				}
+			}
+			this.onRouteMatched();
+		},
 
 		onCreatePopupNotification: function (notifText) {
 			//adicionar animação ao button na navbar
 			this.onUpdateNotificationButton();
+			var that = this;
+
+			var oTile = sap.ui.getCore().byId("App026");
+
+			if (oTile) {
+				// Obtenha o TileContent. Assumindo que há apenas um TileContent.
+				var oTileContent = oTile.getTileContent()[0];
+				// Verifique se o TileContent existe e é uma instância de NumericContent.
+				if (oTileContent && oTileContent.getContent() instanceof sap.m.NumericContent) {
+					// Obtenha o NumericContent.
+					var oNumericContent = oTileContent.getContent();
+
+					// Atualize o valor.
+					var oNewValue = parseInt(oNumericContent.getValue()) + 1;
+					oNumericContent.setValue(oNewValue);
+				}
+			}
 
 
 			var oCloseButton = new sap.m.Button({
@@ -59,16 +98,21 @@ sap.ui.define([
 			}).addStyleClass("closeButtonStyle");
 
 			var oLink = new sap.m.Link({
-				text: "Saber Mais",
-				href: "#",  // Substitua pelo URL desejado
-				target: "_blank"
+				text: this.getView().getModel("i18n").getResourceBundle().getText("readMore"),
+				press: function () {
+					that.onOpenUsrNotifApp();
+				}
 			});
 
 			var oVBox = new sap.m.VBox({
 				items: [
 					new sap.m.Text({
-						text: notifText
+						text: this.getView().getModel("i18n").getResourceBundle().getText("newNotification")
 					}),
+					// TEXTO DA NOTIFICAÇÃO 
+					// new sap.m.Text({
+					// 	text: notifText
+					// }),
 					oLink
 				]
 			}).addStyleClass('notificationStyle');
@@ -91,6 +135,8 @@ sap.ui.define([
 			oPopup.setPosition(sap.ui.core.Popup.Dock.EndBottom, sap.ui.core.Popup.Dock.EndBottom, window, "-25 0", "fit");
 
 			oPopup.open();
+
+
 
 			setTimeout(() => {
 				oPopup.close();
@@ -160,10 +206,6 @@ sap.ui.define([
 
 		onNavBack: function (oEvent) {
 			if (sessionStorage.getItem("bHistory")) {
-
-				// sessionStorage.setItem("app", sessionStorage.getItem("lastAppOpen"));
-				// sessionStorage.setItem("bHistoryCheck", true);
-				// sessionStorage.removeItem("bHistory");
 				sessionStorage.removeItem("iframeState");
 				sessionStorage.removeItem("iframeLink");
 				sessionStorage.removeItem("iframeHeader");
@@ -175,24 +217,21 @@ sap.ui.define([
 				sessionStorage.removeItem("iframeHeader");
 				this.byId("btNavBack").setProperty("visible", false);
 				this.onRouteMatched();
-				// JOMOTA 27/09/2023
-				// window.location.reload(true);
 			}
 		},
 
 		onAfterRendering: function () {
-			// this.byId("_IDGenDynamicPageTitle1").addContent(new sap.m.Text({ text: "ASDAS"}));
-
 			var that = this;
 			window.addEventListener("message", function (event) {
 				var data = event.data;
 				if (data.action === "reloadIframe") {
 					// Aqui, recarregue o iframe
+
 					that.onOpenApp(AppOpen, AppHeaderOpen);
 				}
 				else (data.action === "navTo")
 				{
-					debugger;
+
 					//INFORMAÇÃO RECEBIDA
 					sessionStorage.setItem("bHistory", data.bHistory);
 					sessionStorage.setItem("pathToBack", data.pathToBack);
@@ -208,74 +247,78 @@ sap.ui.define([
 					that.onRouteMatched();
 				}
 			});
-
-
-
 		},
-
 
 		onOpenNotificationPopover: function (oEvent) {
 			var oButton = this.byId("btNotification");
 			if (oButton) {
-				// var $button = oButton.$();  // Obtenha o jQuery DOM reference para o elemento
-				// Verifique se o elemento tem a classe "notifWithRed"
 				if (oButton.hasStyleClass("notifWithRed")) {
 					oButton.removeStyleClass("notifWithRed");
 					oButton.setText("");
 				}
 			}
 
-
 			if (!this._oPopover) {
 				this._oPopover = new sap.m.Popover({
 					title: this.getView().getModel("i18n").getResourceBundle().getText("notifications"),
 					placement: sap.m.PlacementType.Bottom,
-					contentWidth: "300px",  // Ajuste conforme necessário
-					contentHeight: "400px"  // Ajuste conforme necessário
+					contentWidth: "300px",
+					contentHeight: "400px"
 				});
 
-				debugger;
-				var oNotifModel = this.getNotifModel();
-				var oList = new sap.m.List({
-					items: {
-						path: "/xTQAxUSR_NOTIF_DD",
-						template: new sap.m.NotificationListItem({
-							title: "{title}",
-							description: "{description}",
-							datetime: {
-								parts: ['sended_at', 'sended_at_hours'],
-								formatter: function (date, hours) {
-									var ms = hours.ms;
-									if (date && ms) {
-										// Convertendo milissegundos para horas, minutos e segundos
-										var hours = Math.floor(ms / 3600000);  // 1 hour = 3600000 ms
-										var minutes = Math.floor((ms - (hours * 3600000)) / 60000); // 1 minute = 60000 ms
-										var seconds = Math.floor((ms - (hours * 3600000) - (minutes * 60000)) / 1000);
-
-										// Formate em 2 dígitos
-										hours = ('0' + hours).slice(-2);
-										minutes = ('0' + minutes).slice(-2);
-										seconds = ('0' + seconds).slice(-2);
-
-										var formattedDate = sap.ui.core.format.DateFormat.getDateInstance({ pattern: "dd/MM/yyyy" }).format(date);
-										return formattedDate + " " + hours + ":" + minutes + ":" + seconds;
-									}
-									return "";
-								}
-							}
-							// priority: "{priority}"
-						})
-					}
-				});
-
-				oList.setModel(oNotifModel);
-
+				var oList = new sap.m.List();
 				this._oPopover.addContent(oList);
 				this.getView().addDependent(this._oPopover);
 			}
 
+			// Carrega os dados do OData sempre que o popover for aberto
+			var oList = this._oPopover.getContent()[0];  // Assumindo que o primeiro conteúdo do popover é a lista
+			var oNotifModel = this.getNotifModel();
+
+			oNotifModel.read("/xTQAxUSR_NOTIF_DD", {
+				success: function (oData) {
+					var oTemplate = new sap.m.NotificationListItem({
+						title: "{title}",
+						description: "{description}",
+						datetime: {
+							parts: ['sended_at', 'sended_at_hours'],
+							formatter: function (date, hours) {
+								var ms = hours.ms;
+								if (date && ms) {
+									// Convertendo milissegundos para horas, minutos e segundos
+									var hours = Math.floor(ms / 3600000);  // 1 hour = 3600000 ms
+									var minutes = Math.floor((ms - (hours * 3600000)) / 60000); // 1 minute = 60000 ms
+									var seconds = Math.floor((ms - (hours * 3600000) - (minutes * 60000)) / 1000);
+
+									// Formate em 2 dígitos
+									hours = ('0' + hours).slice(-2);
+									minutes = ('0' + minutes).slice(-2);
+									seconds = ('0' + seconds).slice(-2);
+
+									var formattedDate = sap.ui.core.format.DateFormat.getDateInstance({ pattern: "dd/MM/yyyy" }).format(date);
+									return formattedDate + " " + hours + ":" + minutes + ":" + seconds;
+								}
+								return "";
+							}
+						},
+						showCloseButton: false
+					});
+
+					oList.bindItems({
+						path: "/xTQAxUSR_NOTIF_DD",
+						template: oTemplate
+					});
+
+					oList.setModel(oNotifModel);
+				},
+				error: function () {
+					// Tratar erros aqui, se necessário
+				}
+			});
+
 			this._oPopover.openBy(oEvent.getSource());
 		},
+
 
 
 		_onF5Pressed: function (event) {
@@ -296,18 +339,19 @@ sap.ui.define([
 
 		},
 
-		onRouteMatched: function () {
+		onRouteMatched: function (oEvent) {
 
-			//Definir o tema
-			var oTheme = sessionStorage.getItem("selectedTheme");
-			sap.ui.getCore().applyTheme(oTheme);
+			if (!oEvent || oEvent.getParameter("name") === 'Launchpad') {
+				//Definir o tema
+				var oTheme = sessionStorage.getItem("selectedTheme");
+				sap.ui.getCore().applyTheme(oTheme);
 
-			this.onInitWebSocket();
+				this.onInitWebSocket();
 
-			var styleElement = document.createElement("style");
-			styleElement.type = "text/css";
-			if (oTheme == "sap_fiori_3_dark") {
-				styleElement.innerHTML = `
+				var styleElement = document.createElement("style");
+				styleElement.type = "text/css";
+				if (oTheme == "sap_fiori_3_dark") {
+					styleElement.innerHTML = `
 				.myNavButton {
 					color: white !important;
 				}
@@ -333,9 +377,9 @@ sap.ui.define([
 				}
 
 			`;
-			}
-			else {
-				styleElement.innerHTML = `
+				}
+				else {
+					styleElement.innerHTML = `
 				.myNavButton {
 					color: black !important;
 				}
@@ -358,114 +402,96 @@ sap.ui.define([
 					color: #91c8f6 !important;
 				}
 			`;
-			}
-
-
-			document.head.appendChild(styleElement);
-
-
-
-			this.__iframeOpened = false;
-			if (sessionStorage.getItem("iframeState") === "opened") {
-				var AppLink = sessionStorage.getItem("iframeLink");
-				var AppHeader = sessionStorage.getItem("iframeHeader");
-				sessionStorage.removeItem("iframeState");
-				sessionStorage.removeItem("iframeLink");
-				sessionStorage.removeItem("iframeHeader");
-				this.onOpenApp(AppLink, AppHeader);
-			}
-			var that = this;
-			var rnm_tk = sessionStorage.getItem('rnm_tk');
-			if (rnm_tk == null || rnm_tk == 'undefined') {
-				this.getRouter().navTo("RouteMain");
-			} else {
-				//ALTEREI
-
-				var userName = sessionStorage.getItem("userName");
-				var words = userName.split(' ');
-				// Inicializar uma variável para armazenar as primeiras letras
-				var firstChars = '';
-				// Loop através das palavras e obter a primeira letra de cada uma
-				for (var i = 0; i < words.length; i++) {
-					firstChars += words[i].charAt(0);
 				}
-				// Converter as primeiras letras para maiúsculas
-				firstChars = firstChars.toUpperCase();
-				this.getModel("Launchpad").setProperty("/userName", firstChars);
 
-				var userLanguage = sessionStorage.getItem("oLangu");
-				if (!userLanguage) {
-					userLanguage = "PT"; // Neste caso, estou definindo a língua diretamente para "FR" como no seu exemplo
+
+				document.head.appendChild(styleElement);
+
+
+
+				this.__iframeOpened = false;
+				if (sessionStorage.getItem("iframeState") === "opened") {
+					var AppLink = sessionStorage.getItem("iframeLink");
+					var AppHeader = sessionStorage.getItem("iframeHeader");
+					sessionStorage.removeItem("iframeState");
+					sessionStorage.removeItem("iframeLink");
+					sessionStorage.removeItem("iframeHeader");
+					this.onOpenApp(AppLink, AppHeader);
 				}
-				var serviceUrlWithLanguage = this.getModel().sServiceUrl + (this.getModel().sServiceUrl.includes("?") ? "&" : "?") + "sap-language=" + userLanguage;
+				var that = this;
+				var rnm_tk = sessionStorage.getItem('rnm_tk');
+				// var rnm_tk = sessionStorage.getItem('rnm_tk');
+				if (rnm_tk == null || rnm_tk == 'undefined') {
+					this.getRouter().navTo("RouteMain");
+				} else {
+					//ALTEREI
 
-				// this.getModel("Launchpad").setProperty("/userName", "JM");
-
-				var oModel = new sap.ui.model.odata.v2.ODataModel({
-					serviceUrl: serviceUrlWithLanguage,
-					headers: {
-						"authorization": rnm_tk,
-						"launchpadlangu": userLanguage
+					var userName = sessionStorage.getItem("userName");
+					var words = userName.split(' ');
+					// Inicializar uma variável para armazenar as primeiras letras
+					var firstChars = '';
+					// Loop através das palavras e obter a primeira letra de cada uma
+					for (var i = 0; i < words.length; i++) {
+						firstChars += words[i].charAt(0);
 					}
-				});
+					// Converter as primeiras letras para maiúsculas
+					firstChars = firstChars.toUpperCase();
+					this.getModel("Launchpad").setProperty("/userName", firstChars);
 
-				oModel.read("/LAUNCHPADSet", {
-					success: function (oData, oResponse) {
+					var userLanguage = sessionStorage.getItem("oLangu");
+					if (!userLanguage) {
+						userLanguage = "PT"; // Neste caso, estou definindo a língua diretamente para "FR" como no seu exemplo
+					}
+					var serviceUrlWithLanguage = this.getModel().sServiceUrl + (this.getModel().sServiceUrl.includes("?") ? "&" : "?") + "sap-language=" + userLanguage;
 
-						try {
-							that.getModel("global").setProperty("/busy", true);
-							// CARREGAR AS APPS DISPONÍVEIS 
-							that.getModel("global").setProperty("/userName", oData.results[0].UserName);
-							that.getModel("global").setProperty("/partner", oData.results[0].BuSort1);
-							if (sessionStorage.getItem("iframeState") != "opened")
-								that.onLoadLaunchpad(oData.results);
+					// this.getModel("Launchpad").setProperty("/userName", "JM");
+
+					var oModel = new sap.ui.model.odata.v2.ODataModel({
+						serviceUrl: serviceUrlWithLanguage,
+						headers: {
+							"authorization": rnm_tk,
+							"launchpadlangu": userLanguage
 						}
-						catch {
-							that.getModel("global").setProperty("/busy", true);
-							sessionStorage.removeItem("iframeState");
-							sessionStorage.removeItem("iframeLink");
-							sessionStorage.removeItem("iframeHeader");
-							that.byId("btNavBack").setProperty("visible", false);
+					});
+
+					oModel.read("/LAUNCHPADSet", {
+						success: function (oData, oResponse) {
+
+							try {
+								that.getModel("global").setProperty("/busy", true);
+								// CARREGAR AS APPS DISPONÍVEIS 
+								that.getModel("global").setProperty("/userName", oData.results[0].UserName);
+								that.getModel("global").setProperty("/partner", oData.results[0].BuSort1);
+								if (sessionStorage.getItem("iframeState") != "opened")
+									that.onLoadLaunchpad(oData.results);
+							}
+							catch {
+								that.getModel("global").setProperty("/busy", true);
+								sessionStorage.removeItem("iframeState");
+								sessionStorage.removeItem("iframeLink");
+								sessionStorage.removeItem("iframeHeader");
+								that.byId("btNavBack").setProperty("visible", false);
+								sessionStorage.setItem("rnm_tk", 'undefined');
+								that.onRouteMatched();
+							}
+						},
+						error: function (oError) {
+							// AQUI LIMPAMOS A SESSÃO PORQUE O TOKEN NÃO É VALIDO
 							sessionStorage.setItem("rnm_tk", 'undefined');
-							that.onRouteMatched();
+							that.getModel("global").setProperty("/busy", true);
+							var sError = JSON.parse(oError.responseText).error.message.value;
+							sap.m.MessageBox.alert(sError, {
+								icon: "ERROR",
+								onClose: null,
+								styleClass: '',
+								initialFocus: null,
+								textDirection: sap.ui.core.TextDirection.Inherit
+							});
+							that.getRouter().navTo("RouteMain");
 						}
+					});
 
-						// if (oData.results) {
-						// 	that.getModel("global").setProperty("/busy", true);
-						// 	// CARREGAR AS APPS DISPONÍVEIS 
-						// 	that.getModel("global").setProperty("/userName", oData.results[0].UserName);
-						// 	that.getModel("global").setProperty("/partner", oData.results[0].BuSort1);
-						// 	if (sessionStorage.getItem("iframeState") != "opened")
-						// 		that.onLoadLaunchpad(oData.results);
-						// }
-						// else {
-						// 	that.getModel("global").setProperty("/busy", true);
-						// 	sessionStorage.removeItem("iframeState");
-						// 	sessionStorage.removeItem("iframeLink");
-						// 	sessionStorage.removeItem("iframeHeader");
-						// 	that.byId("btNavBack").setProperty("visible", false);
-						// 	sessionStorage.setItem("rnm_tk", 'undefined');
-						// 	that.onRouteMatched();
-						// }
-						// that.onOpenApp();
-						// console.log(oData);
-					},
-					error: function (oError) {
-						// AQUI LIMPAMOS A SESSÃO PORQUE O TOKEN NÃO É VALIDO
-						sessionStorage.setItem("rnm_tk", 'undefined');
-						that.getModel("global").setProperty("/busy", true);
-						var sError = JSON.parse(oError.responseText).error.message.value;
-						sap.m.MessageBox.alert(sError, {
-							icon: "ERROR",
-							onClose: null,
-							styleClass: '',
-							initialFocus: null,
-							textDirection: sap.ui.core.TextDirection.Inherit
-						});
-						that.getRouter().navTo("RouteMain");
-					}
-				});
-
+				}
 			}
 		},
 
@@ -534,10 +560,24 @@ sap.ui.define([
 					// footer: element.AppFooter
 				});
 
-				var imageContent = new sap.m.ImageContent({
-					src: element.AppIcon,
-					description: "Adicionar Descrição"
-				});
+				// var imageContent = new sap.m.ImageContent({
+				// 	src: element.AppIcon,
+				// 	description: "Adicionar Descrição"
+				// });
+
+				//30102023
+				if (element.AppCount != 0)
+					var imageContent = new sap.m.NumericContent({
+						value: element.AppCount,
+						icon: element.AppIcon
+					});
+				else {
+					var imageContent = new sap.m.ImageContent({
+						src: element.AppIcon,
+						description: "Adicionar Descrição"
+					});
+				}
+
 
 				tileContent1.setContent(imageContent);
 				genericTile1.addTileContent(tileContent1);
@@ -545,13 +585,40 @@ sap.ui.define([
 				var vBox = sap.ui.getCore().byId("vbContent" + element.GrpId);
 				vBox.addItem(genericTile1);
 			})
+
+			// this.createChatButton();
+
+			// var oText = new sap.m.Text({
+			// 	text: "1231221"
+			// });
+
+			// oDynamicPage.addItem(oText);
+			// this._oChatButton = new sap.m.Button({
+			// 	id: "chatButton",
+			// 	icon: "sap-icon://discussion",
+			// 	press: this.createChatPopover.bind(this),
+			// 	tooltip: "{i18n>chatButtonTooltip}",
+			// 	type: sap.m.ButtonType.Unstyled
+			// }).addStyleClass("customChatButton");
+
+			verticalLayout.addContent(this._oChatButton);
 			oDynamicPage.addContent(verticalLayout);
 			oDynamicPage.setProperty("visible", true);
 			oDynamicApps.setContent(oDynamicPage);
 			that.getModel("global").setProperty("/busy", false);
 
-			debugger;
+			// setTimeout(function () {
+			// 	if (this._oChatButton && this._oChatButton.getDomRef()) {
+			// 		// Certifique-se de que o botão esteja renderizado antes de habilitar o arraste
+			// 		this._enableChatButtonHorizontalDrag();
+			// 	} else {
+			// 		// Caso o botão não esteja no DOM após os 10 segundos, talvez você queira tentar novamente ou lidar com o erro
+			// 		console.error("Chat button was not rendered in time to enable dragging.");
+			// 	}
+			// }.bind(this), 1500);
+
 			if (sessionStorage.getItem("app")) {
+
 				var oTile = sap.ui.getCore().byId("App" + sessionStorage.getItem("app"));
 				oTile.firePress();
 				// NewEntry
@@ -561,7 +628,7 @@ sap.ui.define([
 					var oTile = sap.ui.getCore().byId("App" + sessionStorage.getItem("lastAppOpen"));
 					sessionStorage.removeItem("lastAppOpen");
 					sessionStorage.removeItem("bHistory");
-					debugger;
+
 					if (sessionStorage.getItem("pathToBack")) {
 						sessionStorage.setItem("sPathBack", sessionStorage.getItem("pathToBack"))
 						sessionStorage.removeItem("pathToBack");
@@ -570,6 +637,153 @@ sap.ui.define([
 					// NewEntry
 					that.getModel("global").setProperty("/busy", true);
 				}
+		},
+
+		_enableChatButtonHorizontalDrag: function () {
+
+			var oButton = sap.ui.getCore().byId("chatButton");
+			var oDomRef = oButton.getDomRef();
+
+			var startX, startLeft;
+
+			var doDrag = function (e) {
+				var newX = startLeft + (e.clientX - startX);
+				newX = Math.max(0, newX) + 25; // Evitar que o botão vá além da borda esquerda
+				newX = Math.min(window.innerWidth - oDomRef.offsetWidth, newX) - 20; // Evitar que o botão vá além da borda direita
+				oDomRef.style.left = newX + 'px';
+			};
+
+			var stopDrag = function () {
+				document.removeEventListener('mousemove', doDrag);
+				document.removeEventListener('mouseup', stopDrag);
+			};
+
+			oDomRef.addEventListener('mousedown', function (e) {
+				startX = e.clientX;
+				startLeft = oDomRef.offsetLeft;
+				document.addEventListener('mousemove', doDrag);
+				document.addEventListener('mouseup', stopDrag);
+			});
+		},
+
+
+
+		createChatPopover: function () {
+			if (!this._oChatPopover) {
+				// Template para as mensagens
+				var oMessageTemplate = new sap.m.FeedListItem({
+					sender: "{Chat>sender}",
+					text: "{Chat>text}",
+					timestamp: "{Chat>timestamp}"
+				}).addStyleClass("chatMessageItem");
+
+				// ScrollContainer para as mensagens
+				var oScrollContainer = new sap.m.ScrollContainer({
+					vertical: true,
+					height: "350px", // Ajuste de acordo com a altura desejada
+					content: [
+						new sap.m.List({
+							items: {
+								path: "Chat>/messages",
+								template: oMessageTemplate
+							}
+						}).addStyleClass("customMessageList")
+					]
+				});
+
+				// Campo de entrada para novas mensagens
+				this._oMessageInput = new sap.m.Input({
+					id: "inChat",
+					width: "160%",
+					placeholder: "{i18n>...}",
+					submit: this.sendMessage.bind(this)
+				}).addStyleClass("sapUiTinyMarginBegin");
+
+				var oSendButton = new sap.m.Button({
+					icon: "sap-icon://feeder-arrow",
+					type: sap.m.ButtonType.Emphasized,
+					press: this.sendMessage.bind(this)
+				}); // Isso adiciona uma pequena margem no começo, o que pode ser necessário dependendo do layout.
+
+				var oInputHBox = new sap.m.HBox({
+					alignItems: sap.m.FlexAlignItems.Center,
+					justifyContent: sap.m.FlexJustifyContent.SpaceBetween,
+					items: [this._oMessageInput, oSendButton],
+					width: "100%" // Certifique-se de que a HBox ocupe 100% da largura disponível
+				}).addStyleClass("sapUiTinyMarginBottom");
+
+
+				// VBox para o layout principal do popover
+				var oChatVBox = new sap.m.VBox({
+					items: [oScrollContainer, oInputHBox]
+				});
+
+				// Criação do Popover
+				this._oChatPopover = new sap.m.Popover({
+					showHeader: false,
+					placement: sap.m.PlacementType.VerticalPreferredBottom,
+					content: [oChatVBox],
+					contentWidth: "350px",
+					afterOpen: function () {
+						oController._scrollToBottom();
+					}
+				}).addStyleClass("customChatPopover");
+
+				this._oChatPopover.attachAfterClose(function () {
+					this._oChatPopover.close(); // Esconde o popover em vez de destruí-lo
+				}.bind(this));
+
+				// Adiciona o Popover como um dependente da view
+				this.getView().addDependent(this._oChatPopover);
+			} else {
+				// Se o popover já existe, apenas o reabra e realinhe a rolagem
+				this._oChatPopover.openBy(this._oChatButton);
+				this._scrollToBottom();
+			}
+
+			if (this._oChatPopover.isOpen()) {
+				this._scrollToBottom(); 
+			}
+
+			// Abre o Popover
+			this._oChatPopover.openBy(this._oChatButton);
+
+		},
+
+		sendMessage: function (oEvent) {
+			var sValue = oEvent.getParameter("value") || this._oMessageInput.getValue();
+			var oChatModel = this.getView().getModel("Chat");
+
+			if (sValue.trim()) {
+				// Adiciona a nova mensagem ao modelo
+				var aMessages = oChatModel.getProperty("/messages");
+				aMessages.push({
+					sender: "You",
+					text: sValue.trim(),
+					timestamp: new Date().toLocaleTimeString()
+				});
+				oChatModel.setProperty("/messages", aMessages);
+
+				// Limpa o campo de entrada
+				this._oMessageInput.setValue("");
+
+				// Atualizar o modelo para refletir as mudanças
+				oChatModel.refresh(true);
+
+				// Chama o método de rolagem
+				this._scrollToBottom();
+			}
+		},
+
+		_scrollToBottom: function () {
+			// oMessageList é o primeiro item dentro do ScrollContainer que é o primeiro item da VBox
+			var oScrollContainer = this._oChatPopover.getContent()[0].getItems()[0];
+			var oDomRef = oScrollContainer.getDomRef();
+			if (oDomRef) {
+				setTimeout(function () {
+					oDomRef.scrollTop = oDomRef.scrollHeight;
+				}, 0); // O atraso de 0ms garante que a rolagem aconteça após as atualizações do DOM
+			}
 		},
 
 		onOpenApp: function (AppLink, AppHeader) {
@@ -587,7 +801,7 @@ sap.ui.define([
 
 				// if (sessionStorage.getItem("app") == 'App013') {
 				// 	sessionStorage.removeItem("lastAppOpen");
-				// 	debugger;
+				// 	
 				// 	if (!sessionStorage.getItem("sPathOpen"))
 				// 		AppLink = AppLink + "#/NewEntry";
 				// 	// else {
@@ -680,7 +894,7 @@ sap.ui.define([
 					}));
 
 					oDynamicPage.setContent(oPage);
-				}, 1000);
+				}, 500);
 
 
 
@@ -689,12 +903,67 @@ sap.ui.define([
 
 					that.getModel("global").setProperty("/busy", false);
 					// sap.ui.core.BusyIndicator.hide();
-				}, 1000);
+				}, 500);
 			}
 			// oDynamicPage.setContent(oPage);
 			// this.getModel("global").setProperty("/busy", false);
 
 		},
+
+		onSearch: function (oEvent) {
+			var sValue = oEvent.getSource().getValue();
+			this.filterTiles(sValue);
+		},
+
+		filterTiles: function (sValue) {
+			// Função para remover acentos
+			function removeAccents(value) {
+				return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+			}
+
+			// Convertendo o valor da pesquisa para minúsculas e sem acentos
+			sValue = removeAccents(sValue.toLowerCase());
+
+			// Primeiro, vamos obter o VerticalLayout onde os GridContainers estão
+			var oVerticalLayout = sap.ui.getCore().byId("vlTemp");
+			if (oVerticalLayout) {
+				oVerticalLayout.getContent().forEach(function (content, index) {
+					// Para cada content dentro do VerticalLayout, verificamos se é um GridContainer
+					if (content instanceof sap.f.GridContainer) {
+						let visibleTilesCount = 0;
+
+						content.getItems().forEach(function (tile) {
+							// Aqui, para cada tile dentro do GridContainer, verificamos o AppHeader
+							var tileHeader = tile.getHeader();
+							if (tileHeader) {
+								tileHeader = removeAccents(tileHeader.toLowerCase());
+								if (tileHeader.indexOf(sValue) === -1) {
+									tile.setVisible(false);
+								} else {
+									tile.setVisible(true);
+									visibleTilesCount++;
+								}
+							}
+						});
+
+						// Se não houver tiles visíveis, ocultamos o GridContainer e o título do grupo associado
+						if (visibleTilesCount === 0) {
+							content.setVisible(false);
+							// Assumindo que o título do grupo está sempre acima do GridContainer no VerticalLayout
+							if (index > 0 && oVerticalLayout.getContent()[index - 1] instanceof sap.m.Title) {
+								oVerticalLayout.getContent()[index - 1].setVisible(false);
+							}
+						} else {
+							content.setVisible(true);
+							if (index > 0 && oVerticalLayout.getContent()[index - 1] instanceof sap.m.Title) {
+								oVerticalLayout.getContent()[index - 1].setVisible(true);
+							}
+						}
+					}
+				});
+			}
+		},
+
 
 		openSettingsDialog: function () {
 			var that = this;
@@ -878,6 +1147,30 @@ sap.ui.define([
 			oDialog.open();
 		},
 
+		openHelpDialog: function () {
+			if (!this._oDialog) {
+				this._oDialog = new sap.m.Dialog({
+					title: "{i18n>helpDialogTitle}", // Referencia o título do diálogo via i18n
+					content: new sap.m.Text({ text: "{i18n>greetingText}" }), // Referencia o texto via i18n
+					beginButton: new sap.m.Button({
+						text: "OK",
+						press: function () {
+							this._oDialog.close();
+						}.bind(this)
+					})
+				});
+
+				// Para garantir que os modelos de dados, incluindo o i18n, estão disponíveis no diálogo
+				this.getView().addDependent(this._oDialog);
+
+				// Além disso, conectar o diálogo ao modelo de internacionalização
+				this._oDialog.setModel(this.getView().getModel("i18n"), "i18n");
+			}
+
+			// Abrir o diálogo
+			this._oDialog.open();
+		},
+
 		onPressLogoutPopover: function (oEvent) {
 			var that = this;
 
@@ -896,16 +1189,6 @@ sap.ui.define([
 				direction: "Column" // Alinhar os itens verticalmente em coluna
 			});
 
-			var oBTInbox = new sap.m.Button({
-				text: this.getView().getModel("i18n").getResourceBundle().getText("Inbox"),
-				type: "Unstyled",
-				icon: "sap-icon://inbox",
-				press: function (event) {
-					that.openSettingsDialog();
-				}
-			}).addStyleClass("myNavButton")
-			oFlexBox.addItem(oBTInbox);
-
 			var oBTSettings = new sap.m.Button({
 				text: this.getView().getModel("i18n").getResourceBundle().getText("Settings"),
 				type: "Unstyled",
@@ -916,6 +1199,16 @@ sap.ui.define([
 			}).addStyleClass("myNavButton")
 			// oBTSettings.addStyleClass("sapUiTinyMarginBegin"); // Adicionar classe CSS para espaçamento entre os botões
 			oFlexBox.addItem(oBTSettings);
+
+			// var oBTHelp = new sap.m.Button({
+			// 	text: this.getView().getModel("i18n").getResourceBundle().getText("Ajuda"),
+			// 	type: "Unstyled",
+			// 	icon: "sap-icon://sys-help",
+			// 	press: function (event) {
+			// 		that.openHelpDialog();
+			// 	}
+			// }).addStyleClass("myNavButton")
+			// oFlexBox.addItem(oBTHelp);
 
 			var oBTAbout = new sap.m.Button({
 				text: this.getView().getModel("i18n").getResourceBundle().getText("About"),
@@ -949,7 +1242,9 @@ sap.ui.define([
 								sessionStorage.removeItem("usrid");
 								that.byId("btNavBack").setProperty("visible", false);
 								sessionStorage.setItem("rnm_tk", 'undefined');
-								that.onRouteMatched();
+								sessionStorage.clear();
+								that.getRouter().navTo("RouteMain");
+								// that.onRouteMatched();
 							}
 						}
 					});

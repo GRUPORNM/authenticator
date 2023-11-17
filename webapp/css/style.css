@@ -209,3 +209,71 @@ main {position: absolute;top: 50%;-webkit-transform: translateY(-50%);-ms-transf
     row-gap: 20px !important;
     column-gap: 7em !important;
 }
+
+.sapMNCValue{
+    width: auto !important;
+}
+
+.customChatButton {
+    /* Estilos para o Bar se necessário, como altura, cor de fundo, etc. */
+    position: fixed !important;
+    bottom: 25px !important;
+    font-weight: 300px !important;
+    /* width: 100%; */
+    z-index: 100 !important;
+    background-color: #286eb4 !important;
+    border-radius: 50% !important;
+    /* color: white !important; */
+}
+
+.customChatButton .sapMBtnIcon{
+    color: white !important;
+}
+
+.chatContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.chatMessages {
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.chatInputArea {
+    flex-shrink: 0;
+}
+
+/* #__hbox0 > div:first-child {
+    width: 100% !important;
+} */
+
+/* Estilo para o Popover que contém as mensagens */
+.customChatPopover .sapMList .sapMLIB {
+    /* max-width: 350px; */
+    word-wrap: break-word; /* Quebra palavras longas */
+    /* width: 350px; */
+}
+
+
+.customChatPopover .sapMScrollContVH{
+    overflow-x: hidden !important;
+}
+
+
+/* Se o conteúdo exceder a largura, ele vai ser quebrado em várias linhas */
+.customChatPopover .sapMList .sapMLIBContent,
+.customChatPopover .sapMList .sapMLIBContentDiv {
+    white-space: normal;
+}
+
+/* Estilo para o item da mensagem */
+.chatMessageItem .sapMFeedListItemText, .chatMessageItem .sapMFeedListItemFooter {
+    white-space: normal; /* Permite que o texto quebre em várias linhas */
+    word-wrap: break-word; /* Quebra palavras longas que não cabem na linha */
+    max-width: 350px; /* Largura máxima do item da lista */
+    /* width: 350px; */
+}
+
+
