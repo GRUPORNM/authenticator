@@ -12,7 +12,8 @@ sap.ui.define([
 			// Create and set the JSON model
 			var oModel = new JSONModel(
 				{
-					userName: ""
+					userName: "",
+					navBack: false
 				}
 			);
 			this.getView().setModel(oModel, "Launchpad");
@@ -40,6 +41,7 @@ sap.ui.define([
 				this._f5ListenerAdded = true;
 			}
 
+			sessionStorage.setItem("oNavBack", false);
 		},
 
 		onUpdateNotificationButton: function () {
@@ -205,23 +207,55 @@ sap.ui.define([
 		},
 
 		onNavBack: function (oEvent) {
-			if (sessionStorage.getItem("bHistory")) {
-				sessionStorage.removeItem("iframeState");
-				sessionStorage.removeItem("iframeLink");
-				sessionStorage.removeItem("iframeHeader");
-				this.onRouteMatched();
+
+			if (sessionStorage.getItem("goToLaunchpad") == "X") {
+				sessionStorage.setItem("goToLaunchpad", "");
+				if (sessionStorage.getItem("bHistory")) {
+					sessionStorage.removeItem("iframeState");
+					sessionStorage.removeItem("iframeLink");
+					sessionStorage.removeItem("iframeHeader");
+					this.onRouteMatched();
+				}
+				else {
+					sessionStorage.removeItem("iframeState");
+					sessionStorage.removeItem("iframeLink");
+					sessionStorage.removeItem("iframeHeader");
+					// this.byId("btNavBack").setProperty("visible", false);
+					this.getModel("Launchpad").setProperty("/navBack", false);
+					this.onRouteMatched();
+				}
 			}
-			else {
-				sessionStorage.removeItem("iframeState");
-				sessionStorage.removeItem("iframeLink");
-				sessionStorage.removeItem("iframeHeader");
-				this.byId("btNavBack").setProperty("visible", false);
-				this.onRouteMatched();
+			else
+			{
+				var iframe = document.getElementById('appIframe'); 
+				var message = {
+					action: 'goToMainPage'
+				};
+			
+				iframe.contentWindow.postMessage(message, '*');
 			}
+			// if (sessionStorage.getItem("bHistory")) {
+			// 	sessionStorage.removeItem("iframeState");
+			// 	sessionStorage.removeItem("iframeLink");
+			// 	sessionStorage.removeItem("iframeHeader");
+			// 	this.onRouteMatched();
+			// }
+			// else {
+			// 	sessionStorage.removeItem("iframeState");
+			// 	sessionStorage.removeItem("iframeLink");
+			// 	sessionStorage.removeItem("iframeHeader");
+			// 	// this.byId("btNavBack").setProperty("visible", false);
+			// 	this.getModel("Launchpad").setProperty("/navBack", false);
+			// 	this.onRouteMatched();
+			// }
 		},
 
 		onAfterRendering: function () {
 			var that = this;
+			var oNavLogo = document.getElementById("navLogo");
+			if (oNavLogo) {
+				oNavLogo.addEventListener("click", this.onNavBack.bind(this));
+			}
 			window.addEventListener("message", function (event) {
 				var data = event.data;
 				if (data.action === "reloadIframe") {
@@ -332,7 +366,8 @@ sap.ui.define([
 					sessionStorage.removeItem("iframeState");
 					sessionStorage.removeItem("iframeLink");
 					sessionStorage.removeItem("iframeHeader");
-					this.byId("btNavBack").setProperty("visible", false);
+					// this.byId("btNavBack").setProperty("visible", false);
+					this.getModel("Launchpad").setProperty("/navBack", false);
 					window.location.reload(true);
 				}
 			}
@@ -470,7 +505,8 @@ sap.ui.define([
 								sessionStorage.removeItem("iframeState");
 								sessionStorage.removeItem("iframeLink");
 								sessionStorage.removeItem("iframeHeader");
-								that.byId("btNavBack").setProperty("visible", false);
+								// that.byId("btNavBack").setProperty("visible", false);
+								that.getModel("Launchpad").setProperty("/navBack", false);
 								sessionStorage.setItem("rnm_tk", 'undefined');
 								that.onRouteMatched();
 							}
@@ -605,6 +641,7 @@ sap.ui.define([
 			oDynamicPage.addContent(verticalLayout);
 			oDynamicPage.setProperty("visible", true);
 			oDynamicApps.setContent(oDynamicPage);
+
 			that.getModel("global").setProperty("/busy", false);
 
 			// setTimeout(function () {
@@ -742,7 +779,7 @@ sap.ui.define([
 			}
 
 			if (this._oChatPopover.isOpen()) {
-				this._scrollToBottom(); 
+				this._scrollToBottom();
 			}
 
 			// Abre o Popover
@@ -839,7 +876,8 @@ sap.ui.define([
 			if (AppLink && AppHeader) {
 
 				this.__iframeOpened = true;
-				this.byId("btNavBack").setProperty("visible", true);
+				// this.byId("btNavBack").setProperty("visible", true);
+				this.getModel("Launchpad").setProperty("/navBack", true);
 
 				sessionStorage.setItem("iframeState", "opened");
 				sessionStorage.setItem("iframeLink", AppLink);
@@ -890,7 +928,7 @@ sap.ui.define([
 					// oPage.addHeaderContent(button);
 					oPage.addContent(new sap.ui.core.HTML({
 						id: "tempIFrame",
-						content: "<iframe src='" + AppLink + "' width='100%' height='99%' frameBorder='0'></iframe>"
+						content: "<iframe id='appIframe' src='" + AppLink + "' width='100%' height='99%' frameBorder='0'></iframe>"
 					}));
 
 					oDynamicPage.setContent(oPage);
@@ -898,9 +936,8 @@ sap.ui.define([
 
 
 
-				// Definir o atraso de 5 segundos antes de definir o conteúdo do DynamicPage
+				// Definir o atraso de 05 segundos antes de definir o conteúdo do DynamicPage
 				setTimeout(function () {
-
 					that.getModel("global").setProperty("/busy", false);
 					// sap.ui.core.BusyIndicator.hide();
 				}, 500);
@@ -1240,7 +1277,8 @@ sap.ui.define([
 								sessionStorage.removeItem("iframeLink");
 								sessionStorage.removeItem("iframeHeader");
 								sessionStorage.removeItem("usrid");
-								that.byId("btNavBack").setProperty("visible", false);
+								// that.byId("btNavBack").setProperty("visible", false);
+								that.getModel("Launchpad").setProperty("/navBack", false);
 								sessionStorage.setItem("rnm_tk", 'undefined');
 								sessionStorage.clear();
 								that.getRouter().navTo("RouteMain");

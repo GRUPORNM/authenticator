@@ -21,11 +21,12 @@
                             press="onNavBack"
                             type="Transparent"
                             class="btNavBack"
-                            visible="false"
+                            visible="{Launchpad>/navBack}"
                         />
                         <html:img
                             src="/sap/bc/ui5_ui5/tqa/launchpad/img/logobranco.png"
                             width="38"
+                            id="navLogo"
                         />
                     </html:div>
                 </f:heading>

@@ -277,3 +277,6 @@ main {position: absolute;top: 50%;-webkit-transform: translateY(-50%);-ms-transf
 }
 
 
+.sapUiBlockLayer, .sapUiLocalBusyIndicator{
+    background-color: rgba(28,34,40,0.99) !important;
+}
