@@ -1,0 +1,162 @@
+#container-authenticator---Launchpad--_IDGenDynamicPageTitle1 {
+    background-color: #354A5F;
+    background-image: url("../img/navbar.png");
+    box-shadow: 0px 10px 57px -3px rgba(0, 0, 0, 0.24);
+    -webkit-box-shadow: 0px 10px 57px -3px rgba(0, 0, 0, 0.24);
+    -moz-box-shadow: 0px 10px 57px -3px rgba(0, 0, 0, 0.2s4);
+}
+
+.sapMGT {
+    border-radius: 12px !important;
+}
+
+#container-authenticator---ChangePassword--_IDGenFlexBox1 {
+    background-size: cover;
+    -webkit-background-size: cover;
+    background-attachment: scroll;
+    background-image: url("../img/background.png");
+}
+
+.sapMMessageBox {
+    background-color: white !important;
+}
+
+.sapFDynamicPageContent {
+    padding: initial !important;
+}
+
+.sapFDynamicPageContent,
+.sapFDynamicPageContentFitContainer {
+    padding: initial !important;
+}
+
+.sapFDynamicPage-Std-Desktop-XL .sapFDynamicPageContent,
+.sapFDynamicPage-Std-Desktop-XL .sapFDynamicPageContentFitContainer {
+    padding: initial !important;
+}
+
+.sapUiVltCell .sapuiVltCell {
+    height: 95.5% !important;
+}
+
+.loginLogo {
+    margin: 0.75rem 1rem !important;
+}
+
+.avatarButton {
+    border-radius: 50%;
+    background-color: #286eb4;
+    color: white;
+    width: 2.2rem;
+    height: 2.2rem;
+    padding: 0px;
+    border: 0px;
+}
+
+.searchFieldNav {
+    padding-top: 0.35em !important;
+}
+
+.notificationButton {
+    background-color: transparent;
+    font-size: 1.125rem;
+    color: white;
+    width: 2.2rem;
+    height: 2.2rem;
+    padding: 0px !important;
+    border: 0px;
+    position: relative;
+}
+
+.notificationButton:hover {
+    background-color: #142B37;
+}
+
+
+.notificationButton span {
+    font-size: 16px !important;
+}
+
+.sapMBadge .sapMBadgeDefault {
+    position: absolute;
+    top: -0.125rem;
+    right: -0.25rem;
+    z-index: 100;
+    max-width: 100%;
+    padding-right: 0.125rem;
+    box-sizing: border-box;
+    height: 100%;
+    transform-origin: center center;
+    pointer-events: none;
+    padding-left: 5px !important;
+}
+
+.notifWithRed .sapMBtnContent {
+    position: absolute;
+    bottom: -1px;
+    right: 1px;
+    width: 15px;
+    height: 15px;
+    background-color: #F53232;
+    color: white;
+    border-radius: 50%;
+    font-size: auto;
+    line-height: 15px;
+    text-align: center;
+    z-index: 1;
+    font-size: 0.7vw !important;
+    font-weight: bold !important;
+}
+
+.btNavBack {
+    padding-top: 10px !important;
+    padding-right: 10px !important;
+}
+
+.btNavBack span:hover {
+    background-color: transparent !important;
+}
+
+.btNavBack span:active {
+    background-color: transparent !important;
+}
+
+.btNavBack span span {
+    color: white !important;
+    font-size: 1.5rem !important;
+}
+
+.sapUiSizeCompact .sapFDynamicPageTitle .sapMTB {
+    height: 3rem !important;
+}
+
+.customPanelStyle {
+    color: white;
+    opacity: 1;
+}
+
+.customPanelStyle .sapMPanelContent {
+    border-bottom: none !important;
+    padding: 10px !important;
+    width: 300px !important;
+    margin-bottom: 10px !important;
+}
+
+
+.closeButtonStyle {
+    margin-right: -20px !important;
+    margin-top: -12px !important;
+}
+
+@keyframes fadeInOut {
+
+    0%,
+    100% {
+        opacity: 0;
+    }
+
+    10%,
+    90% {
+        opacity: 1;
+    }
+}

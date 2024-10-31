@@ -1,0 +1,69 @@
+.variantMode .sapMInputBaseContentWrapper{
+    border: 0px !important;
+}
+
+.variantMode input{
+    color: #0a6ed1 !important;
+    font-size: 1.1rem !important;
+    padding-top: 5px !important;
+}
+
+.variantMode :hover{
+    background-color: transparent !important;
+}
+
+.variantMode .sapMInputBaseContentWrapper{
+    background-color: transparent !important;
+}
+
+.variantMode span{
+    font-size: 27px !important;
+    color: #0a6ed1 !important;
+}
+
+.variantMode .sapUiIcon {
+    line-height: 0.5rem !important;
+}
+
+.variantModeBlack .sapMInputBaseContentWrapper{
+    border: 0px !important;
+}
+
+.variantModeBlack input{
+    color: #91c8f6 !important;
+    font-size: 1rem;
+}
+
+.variantModeBlack span{
+    color: #91c8f6 !important;
+    font-size: 27px !important;
+}
+
+.variantModeBlack .sapUiIcon {
+    line-height: 0.5rem !important;
+}
+
+
+.selectedVariant{
+    background-color: #e5f0fa !important;
+    border-bottom: 0.0625rem solid #0854a0;
+}
+
+.sapMList ul {
+    height: 250px !important;
+}
+
+.darkMode{
+    cursor: pointer;
+    color: #91c8f6;
+    text-shadow: none;
+}
+
+#container-shipsmanagement---Main--page-content{
+    overflow: scroll !important;
+}
+
+[id*="btnPersonalisation"] {
+    display: none;
+}
+

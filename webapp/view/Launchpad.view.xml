@@ -1,0 +1,35 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m" controllerName="authenticator.controller.Launchpad"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:l="sap.ui.layout"
+    xmlns:f="sap.f">
+    <f:DynamicPage id="DynamicApps" headerExpanded="{/headerExpanded}" toggleHeaderOnTitleClick="{/titleClickable}">
+        <f:title>
+            <f:DynamicPageTitle id="_IDGenDynamicPageTitle1">
+                <f:heading>
+                    <html:div>
+                        <Button id="btNavBack" icon="sap-icon://nav-back" press="onNavBack" type="Transparent" class="btNavBack" visible="{Launchpad>/navBack}" />
+                        <html:img src="/sap/bc/ui5_ui5/tqa/launchpad/img/logobranco.png" width="38" id="navLogo" />
+                    </html:div>
+                </f:heading>
+                <f:actions>
+                    <HBox id="navBarActions2">
+                        <SearchField id="searchField" visible="{view>/searchVisible}" placeholder="{i18n>searchPlaceholder}" class="searchFieldNav" liveChange="onSearch" />
+                        <Button id="btNotification" type="Unstyled" class="notificationButton " icon="sap-icon://bell" tooltip="{i18n>notifications}" press="onOpenNotification" text="">
+                            <customData>
+                                <BadgeCustomData id="bgNotification" visible="true"/>
+                            </customData>
+                        </Button>
+                        <Button id="btInformation" text="{Launchpad>/userName}" type="Unstyled" class="avatarButton" press="onPressLogoutPopover" />
+                    </HBox>
+                </f:actions>
+                <f:navigationActions>
+
+                </f:navigationActions>
+            </f:DynamicPageTitle>
+        </f:title>
+        <f:content>
+
+        </f:content>
+    </f:DynamicPage>
+</mvc:View>
